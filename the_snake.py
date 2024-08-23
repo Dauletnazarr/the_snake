@@ -1,4 +1,5 @@
 from random import choice, randint
+import random
 
 import pygame
 
@@ -131,7 +132,6 @@ class Snake(GameObject):
 
     def pop(self):
         if self.position == self.a:
-            self.positions.append(self.position)
             self.length += self.length
         self.last = self.positions[-1]
         if self.last:
@@ -202,7 +202,12 @@ def main():
     while True:
         clock.tick(SPEED)
         apple.draw()
-        snake.draw(pygame.Surface) 
+        snake.draw(pygame.Surface)
+        if snake.positions[0] == apple.position:
+            snake.positions.append(apple.position)
+            apple.position = [(random.randrange(0, 641, 20)), (random.randrange(0, 481, 20))]
+        apple.draw()
+        snake.draw(pygame.Surface)
         pygame.display.update()
         snake.pop()
         handle_keys(snake)
