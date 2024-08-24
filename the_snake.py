@@ -48,6 +48,10 @@ class GameObject:
         self.position = (340, 240)
         self.length = 1
 
+    def draw(self):
+        """Родительский метод для рисования объектов"""
+        pass
+
 
 class Apple(GameObject):
     """Объявляем дочерний класс, унаследованный от GameObject"""
@@ -64,6 +68,11 @@ class Apple(GameObject):
         rect = pygame.Rect(self.position, (GRID_SIZE, GRID_SIZE))
         pygame.draw.rect(screen, self.body_color, rect)
         pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
+
+    def randomize_position(self):
+        """Метод для создания яблока в случайном месте"""
+        self.position = random.randrange(40, 601, 20), random.randrange(
+            20, 441, 20)
 
 
 class Snake(GameObject):
@@ -109,10 +118,10 @@ class Snake(GameObject):
                 self.y = 460
                 self.positions.insert(0, (self.x, self.y - 20))
         if self.direction == DOWN:
-            if self.y < 460:
+            if self.y < 440:
                 self.positions.insert(0, (self.x, self.y + 20))
             else:
-                self.y = 20
+                self.y = 0
                 self.positions.insert(0, (self.x, self.y + 20))
 
     def pop(self):
@@ -129,10 +138,15 @@ class Snake(GameObject):
             self.direction = self.next_direction
             self.next_direction = None
 
-    def snake_reset(self):
+    def reset(self):
         """Метод перезагрузки игры"""
         screen.fill(BOARD_BACKGROUND_COLOR)
         self.positions = [(320, 240)]
+
+    def get_head_position(self):
+        """Метод для вычисления головы змеи"""
+        head = self.positions[0]
+        return head
 
 
 # Функция обработки действий пользователя
@@ -167,11 +181,10 @@ def main():
         apple.draw()
         if snake.positions[0] in snake.positions[
                 1:] and snake.positions[0] != apple.position:
-            snake.snake_reset()
+            snake.reset()
         elif snake.positions[0] == apple.position:
             snake.positions.append(apple.position)
-            apple.position = random.randrange(40, 601, 20), random.randrange(
-                20, 461, 20)
+            apple.randomize_position()
         snake.draw()
         pygame.display.update()
         snake.pop()
