@@ -162,6 +162,7 @@ class Snake(GameObject):
     
     def snake_reset(self):
         self.position = (340, 240)
+        print('ещё один контакт')
 
 
 # Функция обработки действий пользователя
@@ -194,9 +195,13 @@ def main():
         apple.draw()
         snake.draw()
         apple.randomize_position(snake.positions, head)
+        snake.get_head_position()
+        
       #  if head in snake.positions:
-        if snake.positions[0] in snake.positions[1:]:
-            snake.snake_reset()
+        # if snake.positions[0] in snake.positions[5:]:
+        #     print(snake.positions[0])
+        #     snake.snake_reset()
+        snake.draw()
         pygame.display.update()
         snake.pop()
         handle_keys(snake)
