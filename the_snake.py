@@ -165,7 +165,8 @@ def main():
     while True:
         clock.tick(SPEED)
         apple.draw()
-        if snake.positions[0] in snake.positions[1:] and snake.positions[0] != apple.position:
+        if snake.positions[0] in snake.positions[
+                1:] and snake.positions[0] != apple.position:
             snake.snake_reset()
         elif snake.positions[0] == apple.position:
             snake.positions.append(apple.position)
