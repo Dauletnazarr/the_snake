@@ -61,7 +61,6 @@ class GameObject:
     def __init__(self, position=SCREEN_CENTRE, body_color=None):
         self.body_color = body_color
         self.position = position
-        self.length = 1
 
     def draw(self):
         """Родительский метод для рисования объектов"""
@@ -73,8 +72,8 @@ class Apple(GameObject):
     """Объявляем дочерний класс, унаследованный от GameObject"""
 
     def __init__(self, occupied_positions=SCREEN_CENTRE,
-                 position=SCREEN_CENTRE, body_color=None):
-        super().__init__()
+                 position=SCREEN_CENTRE, body_color=APPLE_COLOR):
+        super().__init__(position, body_color)
         self.randomize_position(occupied_positions)
         self.body_color = APPLE_COLOR
 
@@ -99,8 +98,8 @@ class Apple(GameObject):
 class Snake(GameObject):
     """Объявляем дочерний класс для змеи, унаследованный от GameObject"""
 
-    def __init__(self, body_color=SNAKE_COLOR):
-        super().__init__(position=SCREEN_CENTRE, body_color=None)
+    def __init__(self, body_color=SNAKE_COLOR, position=SCREEN_CENTRE):
+        super().__init__(position=position, body_color=body_color)
         self.reset()
         self.direction = RIGHT
         self.body_color = body_color
@@ -134,7 +133,8 @@ class Snake(GameObject):
             ),
         )
 
-        self.last = self.positions[-1]
+        self.last = self.positions.pop() if len(
+            self.positions) > self.length else None
         if len(self.positions) > self.length:
             self.positions.pop()
 
