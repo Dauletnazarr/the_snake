@@ -75,7 +75,6 @@ class Apple(GameObject):
                  position=SCREEN_CENTRE, body_color=APPLE_COLOR):
         super().__init__(position, body_color)
         self.randomize_position(occupied_positions)
-        self.body_color = APPLE_COLOR
 
     def draw(self):
         """Отрисовка яблока"""
@@ -102,7 +101,6 @@ class Snake(GameObject):
         super().__init__(position=position, body_color=body_color)
         self.reset()
         self.direction = RIGHT
-        self.body_color = body_color
         self.last = None
         self.next_direction = None
 
@@ -135,8 +133,6 @@ class Snake(GameObject):
 
         self.last = self.positions.pop() if len(
             self.positions) > self.length else None
-        if len(self.positions) > self.length:
-            self.positions.pop()
 
     def update_direction(self, direction):
         """
