@@ -72,7 +72,7 @@ class GameObject:
 class Apple(GameObject):
     """Объявляем дочерний класс, унаследованный от GameObject"""
 
-    def __init__(self, occupied_positions):
+    def __init__(self, occupied_positions=SCREEN_CENTRE):
         super().__init__(position=SCREEN_CENTRE, body_color=None)
         self.randomize_position(occupied_positions)
         self.body_color = APPLE_COLOR
