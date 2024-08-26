@@ -113,8 +113,6 @@ class Snake(GameObject):
             rect = (pg.Rect(position, (GRID_SIZE, GRID_SIZE)))
             pg.draw.rect(screen, self.body_color, rect)
             pg.draw.rect(screen, BORDER_COLOR, rect, 1)
-        self.a = self.positions[0]
-        self.x, self.y = self.a
 
     def move(self):
         """
