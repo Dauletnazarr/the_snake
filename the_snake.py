@@ -58,10 +58,10 @@ clock = pg.time.Clock()
 class GameObject:
     """Объявляем родительский класс"""
 
-    def __init__(self, position=SCREEN_CENTRE, body_color=None, length=1):
+    def __init__(self, position=SCREEN_CENTRE, body_color=None):
         self.body_color = body_color
         self.position = position
-        self.length = length
+        self.length = 1
 
     def draw(self):
         """Родительский метод для рисования объектов"""
@@ -72,11 +72,11 @@ class GameObject:
 class Apple(GameObject):
     """Объявляем дочерний класс, унаследованный от GameObject"""
 
-    def __init__(self, occupied_positions=SCREEN_CENTRE):
-        super().__init__(position=SCREEN_CENTRE, body_color=None)
+    def __init__(self, occupied_positions=SCREEN_CENTRE,
+                 position=SCREEN_CENTRE, body_color=None):
+        super().__init__()
         self.randomize_position(occupied_positions)
         self.body_color = APPLE_COLOR
-        self.new_position = None
 
     def draw(self):
         """Отрисовка яблока"""
@@ -99,11 +99,11 @@ class Apple(GameObject):
 class Snake(GameObject):
     """Объявляем дочерний класс для змеи, унаследованный от GameObject"""
 
-    def __init__(self):
-        super().__init__(position=SCREEN_CENTRE, body_color=None, length=1)
+    def __init__(self, body_color=SNAKE_COLOR):
+        super().__init__(position=SCREEN_CENTRE, body_color=None)
         self.reset()
         self.direction = RIGHT
-        self.body_color = SNAKE_COLOR
+        self.body_color = body_color
         self.last = None
         self.next_direction = None
 
@@ -113,6 +113,9 @@ class Snake(GameObject):
             rect = (pg.Rect(position, (GRID_SIZE, GRID_SIZE)))
             pg.draw.rect(screen, self.body_color, rect)
             pg.draw.rect(screen, BORDER_COLOR, rect, 1)
+        if self.last:
+            last_rect = pg.Rect(self.last, (GRID_SIZE, GRID_SIZE))
+            pg.draw.rect(screen, BOARD_BACKGROUND_COLOR, last_rect)
 
     def move(self):
         """
@@ -130,11 +133,10 @@ class Snake(GameObject):
                  % SCREEN_HEIGHT),
             ),
         )
+
         self.last = self.positions[-1]
-        if self.last:
+        if len(self.positions) > self.length:
             self.positions.pop()
-            last_rect = pg.Rect(self.last, (GRID_SIZE, GRID_SIZE))
-            pg.draw.rect(screen, BOARD_BACKGROUND_COLOR, last_rect)
 
     def update_direction(self, direction):
         """
@@ -145,13 +147,13 @@ class Snake(GameObject):
 
     def reset(self):
         """Метод перезагрузки игры"""
-        self.positions = [(320, 240)]
+        self.positions = [self.position]
         self.direction = random.choice(for_random_direction)
+        self.length = 1
 
     def get_head_position(self):
         """Метод для вычисления головы змеи"""
-        head = self.positions[0]
-        return head
+        return self.positions[0]
 
 
 # Функция обработки действий пользователя
@@ -183,19 +185,18 @@ def main():
     while True:
         clock.tick(SPEED)
         handle_keys(snake)
+        snake.update_direction(snake.direction)
         snake.move()
         if snake.get_head_position() in snake.positions[1:]:
             snake.reset()
             screen.fill(BOARD_BACKGROUND_COLOR)
-        elif snake.positions[0] == apple.position:
+        elif snake.get_head_position() == apple.position:
             snake.positions.append(apple.position)
             snake.length += 1
             apple.randomize_position(snake.positions)
         snake.draw()
         apple.draw()
         pg.display.update()
-        handle_keys(snake)
-        snake.update_direction(snake.direction)
 
 
 if __name__ == '__main__':
